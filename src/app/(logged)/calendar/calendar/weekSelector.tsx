@@ -1,16 +1,30 @@
 import {DateTime} from "luxon";
 
-export default function WeekSelector({ weekInfo, setWeekInfo }: { weekInfo: { weekNumber: number, year: number }, setWeekInfo: (value: { weekNumber: number, year: number }) => void }) {
-    const day = DateTime.fromObject({ weekNumber: weekInfo.weekNumber , weekYear: weekInfo.year })
+export default function WeekSelector({ year, weekNumber, onChange }: {
+    year: number,
+    weekNumber: number,
+    onChange: (newYear: number, newWeek: number) => void
+}) {
+    const current = DateTime.fromObject({ weekNumber, weekYear: year });
 
-    const changeWeek = (type: 'previous' | 'next') => {
-        const newWeek = type === 'previous' ?  day.minus({ week: 1 }) : day.plus({ week: 1 })
-        setWeekInfo({ weekNumber: newWeek.weekNumber, year: newWeek.year })
+    const changeWeek = (type: 'previous' | 'next' | 'current') => {
+        let newDate;
+
+        if (type === 'previous') {
+            newDate = current.minus({ week: 1 })
+        } else if (type === 'next') {
+            newDate = current.plus({ week: 1 })
+        } else {
+            newDate = DateTime.now()
+        }
+
+        onChange(newDate.year, newDate.weekNumber);
     }
 
-    return <div>
+    return <div className='flex flex-row justify-center items-center'>
         <ChangeButton text='<' onClick={() => changeWeek('previous')}></ChangeButton>
-        <div>{day.startOf('week').day}-{day.endOf('week').day} {day.monthLong} {day.year}</div>
+        <div className='mx-2'>{current.startOf('week').day}-{current.endOf('week').day} {current.monthLong} {current.year}</div>
+        <ChangeButton text='N' onClick={() => changeWeek('current')}></ChangeButton>
         <ChangeButton text='>' onClick={() => changeWeek('next')}></ChangeButton>
     </div>
 }
@@ -19,7 +33,7 @@ function ChangeButton({ text, onClick }: { text: string, onClick: () => void }) 
     return (
         <button
             onClick={onClick}
-            className="cursor-pointer rounded-full w-8 h-8 border flex items-center justify-center hover:bg-gray-200"
+            className="cursor-pointer rounded-full w-8 h-8 mx-1 border flex items-center justify-center hover:bg-gray-200"
         >
             {text}
         </button>
