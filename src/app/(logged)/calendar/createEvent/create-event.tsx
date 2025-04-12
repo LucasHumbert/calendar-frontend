@@ -112,7 +112,7 @@ export default function CreateEvent() {
                         </div>
 
                         <div
-                            className='border-t border-gray-300 cursor-pointer flex justify-between items-center px-4 pt-2'>
+                            className='border-t border-gray-300 flex justify-between items-center px-4 pt-2'>
                             <button
                                 type='button'
                                 className='cursor-pointer text-white bg-gray-700 whitespace-nowrap hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5'
